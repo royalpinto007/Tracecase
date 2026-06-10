@@ -6,7 +6,43 @@
   color-scheme: dark;
 }
 
+html,
 body {
-  background: #0a0a0b;
-  color: #e9e9ec;
+  background: #08080a;
+  color: #ededf2;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Subtle ambient glow at the top of the page. */
+.app-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 70% 40% at 50% -8%,
+      rgba(110, 139, 255, 0.14),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 50% 30% at 90% 0%,
+      rgba(54, 214, 195, 0.08),
+      transparent 55%
+    );
+  z-index: 0;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #26262e;
+  border-radius: 8px;
+  border: 2px solid #08080a;
 }
