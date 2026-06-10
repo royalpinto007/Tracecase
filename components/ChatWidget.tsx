@@ -35,7 +35,7 @@ export function ChatWidget({
       const res = await fetch("/api/ai", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ prompt: q, history: next.slice(-5) }),
+        body: JSON.stringify({ prompt: q, history: msgs.slice(-4) }),
       });
       const d = (await res.json()) as { reply?: string; error?: string };
       setMsgs((m) => [

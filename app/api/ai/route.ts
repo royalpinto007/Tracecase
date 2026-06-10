@@ -8,7 +8,25 @@ const SYSTEM =
   "Tracecase records agent test runs, diffs each run against the previous one, " +
   "and flags regressions and unsafe tool calls so CI can block bad prompt or model " +
   "changes before they ship. Answer questions about Tracecase and agent evaluation " +
-  "clearly and concisely, in 1-4 short sentences.";
+  "clearly in at most two complete short sentences. Never prefix your answer with " +
+  "assistant, a role label, or the product name followed by a colon.";
+
+function cleanReply(reply?: string): string {
+  return (reply ?? "")
+    .trim()
+    .replace(/^(?:assistant|ai|bot|tracecase)\s*:\s*/i, "")
+    .trim();
+}
+
+function fixedReply(prompt: string): string | undefined {
+  const question = prompt.trim().toLowerCase().replace(/[?!.,]+$/, "");
+  if (/^(hi|hello|hey|hi there|hello there)$/.test(question)) {
+    return "Hi! Ask me about Tracecase, agent evals, or how a run gets scored.";
+  }
+  if (/^(who are you|what are you|what do you do)$/.test(question)) {
+    return "I'm the Tracecase assistant. I can explain agent evals, run scoring, regressions, and unsafe tool-call detection.";
+  }
+}
 
 const CORS = {
   "access-control-allow-origin": "*",
@@ -32,6 +50,9 @@ export async function POST(req: NextRequest) {
       { status: 400, headers: CORS },
     );
   }
+  const fixed = fixedReply(prompt);
+  if (fixed) return NextResponse.json({ reply: fixed }, { headers: CORS });
+
   const secret = process.env.AI_GATEWAY_SECRET;
   if (!secret) {
     return NextResponse.json(
@@ -41,19 +62,22 @@ export async function POST(req: NextRequest) {
   }
 
   const convo = (Array.isArray(history) ? history.slice(-4) : [])
-    .map((m) => `${m.role}: ${m.content}`)
+    .map((m) =>
+      `${m.role === "assistant" ? "Previous answer" : "Previous question"}: ${m.content}`,
+    )
     .join("\n");
-  const full = convo ? `${convo}\nuser: ${prompt}` : prompt;
+  const full = convo ? `${convo}\nCurrent question: ${prompt}` : prompt;
+  const outputMax = Math.min(Math.max(max ?? 140, 32), 220);
 
   try {
     const r = await fetch(GATEWAY, {
       method: "POST",
       headers: { "content-type": "application/json", "x-ai-secret": secret },
-      body: JSON.stringify({ system: SYSTEM, prompt: full, max: typeof max === "number" ? max : undefined }),
+      body: JSON.stringify({ system: SYSTEM, prompt: full, max: outputMax }),
     });
     const d = (await r.json()) as { reply?: string; error?: string };
     return NextResponse.json(
-      { reply: d.reply || "", error: d.error },
+      { reply: cleanReply(d.reply), error: d.error },
       { headers: CORS },
     );
   } catch {
