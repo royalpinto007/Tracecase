@@ -4,6 +4,31 @@ import type { IngestPayload } from "@/lib/types";
 
 export const runtime = "nodejs";
 
+// GET is informational so visiting the endpoint in a browser explains usage
+// instead of returning a 405.
+export async function GET() {
+  return NextResponse.json({
+    endpoint: "POST /api/runs",
+    auth: "header x-tracecase-token",
+    body: {
+      suite: "string (created on first sight)",
+      label: "string",
+      model: "string (optional)",
+      promptVersion: "string (optional)",
+      results: [
+        {
+          caseName: "string",
+          passed: "boolean",
+          flags: "string[] (optional)",
+          output: "string (optional)",
+          expected: "string (optional)",
+        },
+      ],
+    },
+    returns: { ok: true, runId: "uuid", regressed: 0, flagged: 0, shouldFail: false },
+  });
+}
+
 // POST /api/runs, a CI job posts one run of a suite after a prompt/model change.
 // Tracecase upserts the suite, stores every result, diffs against the previous
 // run of the same suite, and returns the regression/flag summary so CI can fail

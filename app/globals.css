@@ -146,9 +146,65 @@ body {
   animation-delay: 0.2s;
 }
 
+/* Animated "how it works" flow: a pulse travels the connector while each
+   node glows in sequence, so the diagram looks like it is running. */
+.flow-track {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  top: 21px;
+  height: 2px;
+  background: rgb(var(--border));
+  border-radius: 2px;
+  overflow: hidden;
+  display: none;
+}
+@media (min-width: 640px) {
+  .flow-track {
+    display: block;
+  }
+}
+.flow-track::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  height: 4px;
+  width: 22%;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(var(--accent)),
+    transparent
+  );
+  animation: flow-travel 2.8s linear infinite;
+}
+@keyframes flow-travel {
+  0% {
+    left: -22%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+.flow-ico {
+  animation: flow-pulse 2.8s ease-in-out infinite;
+}
+@keyframes flow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(var(--accent) / 0);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgb(var(--accent) / 0.16);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
-  .stagger > * {
+  .stagger > *,
+  .flow-track::before,
+  .flow-ico {
     animation: none !important;
     transition: none !important;
   }

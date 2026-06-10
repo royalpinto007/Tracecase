@@ -2,7 +2,7 @@ export const metadata = { title: "About: Tracecase" };
 
 export default function About() {
   return (
-    <article className="prose-invert max-w-2xl space-y-6 animate-fade-up">
+    <article className="prose-invert mx-auto max-w-2xl space-y-6 animate-fade-up">
       <header className="space-y-2">
         <span className="inline-block rounded-full border border-border bg-surface px-3 py-1 text-[11px] uppercase tracking-widest text-muted">
           about

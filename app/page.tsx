@@ -196,31 +196,42 @@ function Pagination({ page, totalPages }: { page: number; totalPages: number }) 
 
 function HowItWorks() {
   const steps = [
-    { n: "1", t: "CI posts a run", d: "After each prompt or model change, your pipeline posts the suite results." },
-    { n: "2", t: "Tracecase diffs it", d: "Compared against the previous run to find what changed." },
-    { n: "3", t: "Regressions flagged", d: "Cases that newly fail or make unsafe tool calls are surfaced." },
-    { n: "4", t: "Build gated", d: "shouldFail comes back so CI can block the merge." },
+    { t: "CI posts a run", d: "After each prompt or model change, your pipeline posts the suite results." },
+    { t: "Tracecase diffs it", d: "Compared against the previous run to find what changed." },
+    { t: "Regressions flagged", d: "Cases that newly fail or make unsafe tool calls are surfaced." },
+    { t: "Build gated", d: "shouldFail comes back so CI can block the merge." },
   ];
+  const dur = 2.8;
   return (
-    <section className="glass rounded-2xl p-5 animate-fade-in">
-      <h2 className="mb-4 text-sm font-medium text-muted">How it works</h2>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
-        {steps.map((s, i) => (
-          <div key={s.n} className="relative rounded-xl bg-bg p-4">
-            <div className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-to-br from-accent to-accent-2 text-[13px] font-bold text-bg">
-              {s.n}
+    <section className="glass rounded-2xl p-5 sm:p-6 animate-fade-in">
+      <h2 className="mb-6 flex items-center gap-2 text-sm font-medium text-muted">
+        How it works
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-2 py-0.5 text-[10px] text-accent">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
+          running
+        </span>
+      </h2>
+      <div className="relative">
+        <div className="flow-track" />
+        <div className="relative grid grid-cols-1 gap-6 sm:grid-cols-4">
+          {steps.map((s, i) => (
+            <div
+              key={s.t}
+              className="flex flex-col items-center text-center sm:items-start sm:text-left"
+            >
+              <div
+                className="flow-ico grid h-[42px] w-[42px] place-items-center rounded-xl bg-gradient-to-br from-accent to-accent-2 text-[15px] font-bold text-bg"
+                style={{ animationDelay: `${((i * dur) / steps.length).toFixed(2)}s` }}
+              >
+                {i + 1}
+              </div>
+              <div className="mt-3 text-[13.5px] font-semibold">{s.t}</div>
+              <div className="mt-1 text-[12px] leading-relaxed text-muted">
+                {s.d}
+              </div>
             </div>
-            <div className="mt-2.5 text-[13.5px] font-semibold">{s.t}</div>
-            <div className="mt-1 text-[12px] leading-relaxed text-muted">
-              {s.d}
-            </div>
-            {i < steps.length - 1 && (
-              <span className="absolute -right-2 top-1/2 hidden text-muted sm:block">
-                →
-              </span>
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
