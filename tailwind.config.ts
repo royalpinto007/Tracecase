@@ -24,18 +24,29 @@ const config: Config = {
       },
       fontFamily: {
         sans: [
+          "var(--font-sans)",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
           "Segoe UI",
-          "Roboto",
           "sans-serif",
         ],
-        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+        mono: [
+          "var(--font-mono)",
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "monospace",
+        ],
       },
       boxShadow: {
-        card: "0 1px 0 rgba(255,255,255,0.03) inset, 0 8px 24px -12px rgba(0,0,0,0.35)",
-        glow: "0 0 0 1px rgb(var(--accent) / 0.25), 0 8px 30px -8px rgb(var(--accent) / 0.35)",
+        card: "0 1px 0 0 rgb(255 255 255 / 0.04) inset, 0 1px 2px rgb(0 0 0 / 0.2), 0 12px 40px -16px rgb(0 0 0 / 0.55)",
+        glow: "0 0 0 1px rgb(var(--accent) / 0.3), 0 12px 40px -10px rgb(var(--accent) / 0.4)",
+        lift: "0 1px 0 0 rgb(255 255 255 / 0.05) inset, 0 18px 50px -20px rgb(0 0 0 / 0.7)",
+      },
+      borderRadius: {
+        "2xl": "1.1rem",
+        "3xl": "1.5rem",
       },
       keyframes: {
         "fade-up": {

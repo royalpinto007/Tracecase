@@ -60,16 +60,73 @@ body {
   pointer-events: none;
   background:
     radial-gradient(
-      ellipse 70% 40% at 50% -8%,
-      rgb(var(--glow-1) / 0.14),
-      transparent 60%
+      ellipse 60% 50% at 15% -10%,
+      rgb(var(--glow-1) / 0.22),
+      transparent 55%
     ),
     radial-gradient(
-      ellipse 50% 30% at 90% 0%,
-      rgb(var(--glow-2) / 0.09),
+      ellipse 50% 45% at 95% 5%,
+      rgb(var(--glow-2) / 0.14),
       transparent 55%
+    ),
+    radial-gradient(
+      ellipse 80% 60% at 50% 110%,
+      rgb(var(--glow-1) / 0.1),
+      transparent 60%
     );
   z-index: 0;
+}
+
+/* Faint grid texture for depth. */
+.app-bg::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(var(--text) / 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--text) / 0.025) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black, transparent 75%);
+  z-index: 0;
+}
+
+@layer components {
+  /* Modern glass card. */
+  .glass {
+    background:
+      linear-gradient(
+        180deg,
+        rgb(var(--surface) / 0.9),
+        rgb(var(--surface) / 0.55)
+      );
+    backdrop-filter: blur(12px);
+    border: 1px solid rgb(var(--text) / 0.08);
+    box-shadow:
+      0 1px 0 0 rgb(255 255 255 / 0.04) inset,
+      0 12px 40px -18px rgb(0 0 0 / 0.6);
+  }
+  .hover-lift {
+    transition:
+      transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    border-color: rgb(var(--accent) / 0.4);
+    box-shadow: 0 18px 50px -20px rgb(0 0 0 / 0.7);
+  }
+  .gradient-text {
+    background: linear-gradient(
+      120deg,
+      rgb(var(--text)),
+      rgb(var(--accent))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 }
 
 /* Staggered reveal for lists. */

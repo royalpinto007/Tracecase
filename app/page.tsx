@@ -52,7 +52,7 @@ export default async function Home({
         <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-[11px] uppercase tracking-widest text-muted">
           agent reliability
         </span>
-        <h1 className="text-balance text-3xl font-semibold tracking-tight">
+        <h1 className="gradient-text text-balance text-4xl font-semibold tracking-tight sm:text-[2.9rem]">
           CI for your AI agents.
         </h1>
         <p className="max-w-xl text-[15px] leading-relaxed text-muted">
@@ -93,7 +93,7 @@ export default async function Home({
                 <Link
                   key={s.id}
                   href={run ? `/runs/${run.id}` : "#"}
-                  className="group rounded-2xl border border-border bg-surface p-5 shadow-card transition hover:border-accent/50 hover:bg-surface-2"
+                  className="group glass hover-lift rounded-2xl p-5"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
@@ -133,7 +133,7 @@ export default async function Home({
       {totalRuns > 0 && (
         <section className="space-y-3">
           <h2 className="text-sm font-medium text-muted">Recent runs</h2>
-          <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card">
+          <div className="glass overflow-hidden rounded-2xl">
             {pageRuns.map((r) => (
               <Link
                 key={r.id}
@@ -202,7 +202,7 @@ function HowItWorks() {
     { n: "4", t: "Build gated", d: "shouldFail comes back so CI can block the merge." },
   ];
   return (
-    <section className="rounded-2xl border border-border bg-surface p-5 shadow-card animate-fade-in">
+    <section className="glass rounded-2xl p-5 animate-fade-in">
       <h2 className="mb-4 text-sm font-medium text-muted">How it works</h2>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
         {steps.map((s, i) => (
@@ -238,7 +238,7 @@ function Metric({
   const color =
     tone === "bad" ? "text-bad" : tone === "good" ? "text-good" : "text-text";
   return (
-    <div className="rounded-2xl border border-border bg-surface p-4 shadow-card">
+    <div className="glass rounded-2xl p-4">
       <div className={`text-2xl font-semibold tabular-nums ${color}`}>
         {value}
       </div>
