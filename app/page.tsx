@@ -78,7 +78,7 @@ export default async function Home({
         />
       </section>
 
-      <HowItWorks />
+      <PassRateChart runs={allRuns} />
 
       <section className="space-y-3">
         <h2 className="text-sm font-medium text-muted">Suites</h2>
@@ -194,45 +194,90 @@ function Pagination({ page, totalPages }: { page: number; totalPages: number }) 
   );
 }
 
-function HowItWorks() {
-  const steps = [
-    { t: "CI posts a run", d: "After each prompt or model change, your pipeline posts the suite results." },
-    { t: "Tracecase diffs it", d: "Compared against the previous run to find what changed." },
-    { t: "Regressions flagged", d: "Cases that newly fail or make unsafe tool calls are surfaced." },
-    { t: "Build gated", d: "shouldFail comes back so CI can block the merge." },
-  ];
-  const dur = 2.8;
-  return (
-    <section className="glass rounded-2xl p-5 sm:p-6 animate-fade-in">
-      <h2 className="mb-6 flex items-center gap-2 text-sm font-medium text-muted">
-        How it works
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-2 py-0.5 text-[10px] text-accent">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
-          running
-        </span>
-      </h2>
-      <div className="relative">
-        <div className="flow-track" />
-        <div className="relative grid grid-cols-1 gap-6 sm:grid-cols-4">
-          {steps.map((s, i) => (
-            <div
-              key={s.t}
-              className="flex flex-col items-center text-center sm:items-start sm:text-left"
-            >
-              <div
-                className="flow-ico grid h-[42px] w-[42px] place-items-center rounded-xl bg-gradient-to-br from-accent to-accent-2 text-[15px] font-bold text-bg"
-                style={{ animationDelay: `${((i * dur) / steps.length).toFixed(2)}s` }}
-              >
-                {i + 1}
-              </div>
-              <div className="mt-3 text-[13.5px] font-semibold">{s.t}</div>
-              <div className="mt-1 text-[12px] leading-relaxed text-muted">
-                {s.d}
-              </div>
-            </div>
-          ))}
-        </div>
+function PassRateChart({ runs }: { runs: Run[] }) {
+  const series = [...runs]
+    .slice(0, 24)
+    .reverse()
+    .map((r) => (r.total ? Math.round((r.passed / r.total) * 100) : 0));
+
+  const W = 640;
+  const H = 150;
+  const P = 14;
+  const current = series.length ? series[series.length - 1] : 0;
+
+  let body;
+  if (series.length < 2) {
+    body = (
+      <div className="grid h-[150px] place-items-center text-[13px] text-muted">
+        Post a few runs to see the trend (the n8n feeder adds one hourly).
       </div>
+    );
+  } else {
+    const x = (i: number) => P + (i * (W - 2 * P)) / (series.length - 1);
+    const y = (v: number) => H - P - (v / 100) * (H - 2 * P - 6);
+    const line = series
+      .map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`)
+      .join(" ");
+    const area = `${line} L${x(series.length - 1).toFixed(1)} ${H - P} L${x(0).toFixed(1)} ${H - P} Z`;
+    body = (
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: 150 }}>
+        <defs>
+          <linearGradient id="tcfill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="rgb(var(--accent))" stopOpacity="0.28" />
+            <stop offset="1" stopColor="rgb(var(--accent))" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {[25, 50, 75, 100].map((g) => (
+          <line
+            key={g}
+            x1={P}
+            x2={W - P}
+            y1={y(g)}
+            y2={y(g)}
+            stroke="rgb(var(--text) / 0.06)"
+            strokeWidth="1"
+          />
+        ))}
+        <path d={area} fill="url(#tcfill)" className="chart-area" />
+        <path
+          d={line}
+          fill="none"
+          stroke="rgb(var(--accent))"
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+          className="chart-line"
+        />
+        <circle
+          cx={x(series.length - 1)}
+          cy={y(current)}
+          fill="rgb(var(--accent))"
+          className="dot-pulse"
+        />
+      </svg>
+    );
+  }
+
+  return (
+    <section className="glass rounded-2xl p-5 sm:p-6">
+      <div className="mb-4 flex items-end justify-between">
+        <div>
+          <h2 className="text-sm font-medium text-muted">
+            Pass rate · recent runs
+          </h2>
+          <div className="mt-1 flex items-baseline gap-2">
+            <span className="text-3xl font-semibold tabular-nums">
+              {current}%
+            </span>
+            <span className="text-[12px] text-muted">latest</span>
+          </div>
+        </div>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-2.5 py-1 text-[10px] text-accent">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
+          updates hourly
+        </span>
+      </div>
+      {body}
     </section>
   );
 }
