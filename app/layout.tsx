@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import "./globals.css";
-import { Nav } from "@/components/Nav";
+import { Sidebar, MobileBar } from "@/components/Sidebar";
 import { themeInitScript } from "@/components/ThemeToggle";
 
 export const metadata: Metadata = {
@@ -21,30 +20,19 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="app-bg min-h-screen font-sans antialiased">
-        <div className="relative z-10 flex min-h-screen flex-col">
-          <Nav />
-          <main className="mx-auto w-full max-w-5xl flex-1 px-5 py-10">
-            {children}
-          </main>
-          <footer className="border-t border-border-soft">
-            <div className="mx-auto flex max-w-5xl flex-col gap-2 px-5 py-6 text-[12px] text-muted sm:flex-row sm:items-center sm:justify-between">
-              <span>Record runs, replay changes, catch regressions.</span>
-              <span className="flex gap-4">
-                <Link href="/about" className="transition hover:text-text">
-                  About
-                </Link>
-                <Link href="/help" className="transition hover:text-text">
-                  Help
-                </Link>
-                <a
-                  href="/api/runs"
-                  className="transition hover:text-text"
-                >
-                  API
-                </a>
-              </span>
-            </div>
-          </footer>
+        <div className="relative z-10 flex min-h-screen">
+          <Sidebar />
+          <div className="flex min-h-screen min-w-0 flex-1 flex-col">
+            <MobileBar />
+            <main className="flex-1 px-5 py-8 md:px-10 lg:px-14">
+              <div className="mx-auto w-full max-w-6xl">{children}</div>
+            </main>
+            <footer className="border-t border-border-soft px-5 py-5 md:px-10 lg:px-14">
+              <div className="mx-auto w-full max-w-6xl font-mono text-[11px] text-muted">
+                tracecase · record runs · replay changes · catch regressions
+              </div>
+            </footer>
+          </div>
         </div>
       </body>
     </html>

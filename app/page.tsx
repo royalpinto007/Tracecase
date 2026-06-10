@@ -85,7 +85,7 @@ export default async function Home({
         {list.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="stagger grid gap-3">
+          <div className="stagger grid gap-3 lg:grid-cols-2">
             {list.map((s) => {
               const run = latestBySuite.get(s.id);
               const rate = run ? pct(run.passed, run.total) : 0;
