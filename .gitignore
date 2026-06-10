@@ -7,3 +7,8 @@ node_modules
 *.tsbuildinfo
 next-env.d.ts
 .DS_Store
+
+# Secrets / local env: Supabase URL + service-role key live here. Never push.
+.env
+.dev.vars
+.dev.vars.*
