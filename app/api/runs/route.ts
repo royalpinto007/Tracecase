@@ -4,7 +4,7 @@ import type { IngestPayload } from "@/lib/types";
 
 export const runtime = "nodejs";
 
-// POST /api/runs — a CI job posts one run of a suite after a prompt/model change.
+// POST /api/runs, a CI job posts one run of a suite after a prompt/model change.
 // Tracecase upserts the suite, stores every result, diffs against the previous
 // run of the same suite, and returns the regression/flag summary so CI can fail
 // the build when something regressed.

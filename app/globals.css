@@ -2,22 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Dark is the default theme. */
 :root {
+  --bg: 8 8 10;
+  --surface: 17 17 20;
+  --surface-2: 23 23 28;
+  --border: 38 38 46;
+  --border-soft: 29 29 35;
+  --muted: 139 139 150;
+  --text: 237 237 242;
+  --accent: 110 139 255;
+  --accent-2: 54 214 195;
+  --good: 63 185 80;
+  --bad: 248 81 73;
+  --warn: 227 160 8;
+  --glow-1: 110 139 255;
+  --glow-2: 54 214 195;
   color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: 250 250 252;
+  --surface: 255 255 255;
+  --surface-2: 246 247 249;
+  --border: 226 228 233;
+  --border-soft: 235 236 240;
+  --muted: 95 98 110;
+  --text: 18 20 27;
+  --accent: 79 102 241;
+  --accent-2: 13 148 136;
+  --good: 22 134 60;
+  --bad: 201 42 42;
+  --warn: 176 116 4;
+  --glow-1: 79 102 241;
+  --glow-2: 13 148 136;
+  color-scheme: light;
 }
 
 html,
 body {
-  background: #08080a;
-  color: #ededf2;
+  background: rgb(var(--bg));
+  color: rgb(var(--text));
 }
 
 body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
-/* Subtle ambient glow at the top of the page. */
 .app-bg::before {
   content: "";
   position: fixed;
@@ -26,15 +61,40 @@ body {
   background:
     radial-gradient(
       ellipse 70% 40% at 50% -8%,
-      rgba(110, 139, 255, 0.14),
+      rgb(var(--glow-1) / 0.14),
       transparent 60%
     ),
     radial-gradient(
       ellipse 50% 30% at 90% 0%,
-      rgba(54, 214, 195, 0.08),
+      rgb(var(--glow-2) / 0.09),
       transparent 55%
     );
   z-index: 0;
+}
+
+/* Staggered reveal for lists. */
+.stagger > * {
+  animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 0.05s;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 0.1s;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 0.15s;
+}
+.stagger > *:nth-child(n + 5) {
+  animation-delay: 0.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  .stagger > * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -42,7 +102,7 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #26262e;
+  background: rgb(var(--border));
   border-radius: 8px;
-  border: 2px solid #08080a;
+  border: 2px solid rgb(var(--bg));
 }

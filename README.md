@@ -11,7 +11,7 @@ allowed.
 
 ## How it works
 
-1. Define a **suite** (a set of agent test cases) — created automatically on
+1. Define a **suite** (a set of agent test cases), created automatically on
    first post.
 2. Your CI runs the suite against the current agent config and **POSTs the
    results** to `/api/runs`.
@@ -23,7 +23,7 @@ allowed.
 ## Stack
 
 - Next.js 14 (App Router) + TypeScript + Tailwind
-- Supabase (Postgres) — shares the AgentPostmortem project; owns the `tc_*` tables
+- Supabase (Postgres), shares the AgentPostmortem project; owns the `tc_*` tables
 - Cloudflare Workers via the OpenNext adapter
 
 ## Setup
@@ -62,5 +62,5 @@ curl -X POST "$TRACECASE_URL/api/runs" \
   }'
 ```
 
-The response includes `shouldFail: true` when there are regressions or flags —
+The response includes `shouldFail: true` when there are regressions or flags -
 wire that into your CI step's exit code.

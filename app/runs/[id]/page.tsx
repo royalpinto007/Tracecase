@@ -140,7 +140,7 @@ export default async function RunPage({
                         }`}
                       >
                         {tc.name}
-                        {tc.allowed === false && " — not allowed"}
+                        {tc.allowed === false && ", not allowed"}
                       </div>
                     ))}
                   </div>
