@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { db } from "@/lib/supabase";
 import type { Run, Suite } from "@/lib/types";
+import { DemoButton } from "@/components/DemoButton";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +10,13 @@ function pct(passed: number, total: number) {
   return Math.round((passed / total) * 100);
 }
 
-export default async function Home() {
+const PER_PAGE = 12;
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) {
   const supabase = db();
   const { data: suites } = await supabase
     .from("tc_suites")
@@ -24,14 +31,20 @@ export default async function Home() {
 
   const allRuns = (runs ?? []) as Run[];
   const latestBySuite = new Map<string, Run>();
+  const suiteName = new Map<string, string>();
   for (const r of allRuns) {
     if (!latestBySuite.has(r.suite_id)) latestBySuite.set(r.suite_id, r);
   }
 
   const list = (suites ?? []) as Suite[];
+  for (const s of list) suiteName.set(s.id, s.name);
   const totalRuns = allRuns.length;
   const totalRegressions = allRuns.reduce((a, r) => a + r.regressed, 0);
   const totalFlagged = allRuns.reduce((a, r) => a + r.flagged, 0);
+
+  const page = Math.max(1, parseInt(searchParams.page ?? "1", 10) || 1);
+  const totalPages = Math.max(1, Math.ceil(totalRuns / PER_PAGE));
+  const pageRuns = allRuns.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   return (
     <div className="space-y-10">
@@ -47,6 +60,12 @@ export default async function Home() {
           Tracecase diffs the results, then flags regressions and unsafe tool
           calls before they reach production.
         </p>
+        <div className="flex items-center gap-3 pt-1">
+          <DemoButton />
+          <span className="text-[12px] text-muted">
+            triggers a sample run, watch it appear below
+          </span>
+        </div>
       </section>
 
       <section className="grid grid-cols-1 gap-3 animate-fade-in sm:grid-cols-3">
@@ -110,7 +129,68 @@ export default async function Home() {
           </div>
         )}
       </section>
+
+      {totalRuns > 0 && (
+        <section className="space-y-3">
+          <h2 className="text-sm font-medium text-muted">Recent runs</h2>
+          <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card">
+            {pageRuns.map((r) => (
+              <Link
+                key={r.id}
+                href={`/runs/${r.id}`}
+                className="flex items-center justify-between gap-3 border-b border-border-soft px-4 py-3 text-[13px] transition last:border-0 hover:bg-surface-2"
+              >
+                <span className="flex min-w-0 items-center gap-2">
+                  <span className="truncate font-mono text-text">{r.label}</span>
+                  <span className="hidden truncate text-muted sm:inline">
+                    {suiteName.get(r.suite_id) ?? ""}
+                  </span>
+                </span>
+                <span className="flex shrink-0 items-center gap-2">
+                  {r.regressed > 0 && <Pill tone="bad">{r.regressed} reg</Pill>}
+                  {r.flagged > 0 && <Pill tone="warn">{r.flagged} flag</Pill>}
+                  <span
+                    className={
+                      r.passed === r.total ? "text-good" : "text-warn"
+                    }
+                  >
+                    {r.passed}/{r.total}
+                  </span>
+                </span>
+              </Link>
+            ))}
+          </div>
+          {totalPages > 1 && (
+            <Pagination page={page} totalPages={totalPages} />
+          )}
+        </section>
+      )}
     </div>
+  );
+}
+
+function Pagination({ page, totalPages }: { page: number; totalPages: number }) {
+  const linkCls =
+    "rounded-lg border border-border bg-surface px-3 py-1.5 text-[13px] transition hover:border-accent/50 hover:text-text";
+  const disabled = "pointer-events-none opacity-40";
+  return (
+    <nav className="flex items-center justify-between pt-1 text-muted">
+      <a
+        href={`/?page=${page - 1}`}
+        className={`${linkCls} ${page <= 1 ? disabled : ""}`}
+      >
+        ← Newer
+      </a>
+      <span className="text-[12px]">
+        Page {page} of {totalPages}
+      </span>
+      <a
+        href={`/?page=${page + 1}`}
+        className={`${linkCls} ${page >= totalPages ? disabled : ""}`}
+      >
+        Older →
+      </a>
+    </nav>
   );
 }
 

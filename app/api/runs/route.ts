@@ -126,6 +126,19 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Cap retained history so the demo data plateaus instead of growing forever.
+  // Keep the newest CAP runs; their results cascade on delete.
+  const CAP = 50;
+  const { data: edge } = await supabase
+    .from("tc_runs")
+    .select("created_at")
+    .order("created_at", { ascending: false })
+    .range(CAP, CAP);
+  const cutoff = (edge as { created_at: string }[] | null)?.[0]?.created_at;
+  if (cutoff) {
+    await supabase.from("tc_runs").delete().lt("created_at", cutoff);
+  }
+
   return NextResponse.json({
     ok: true,
     runId,
