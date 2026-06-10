@@ -60,7 +60,7 @@ export default async function Home({
           Tracecase diffs the results, then flags regressions and unsafe tool
           calls before they reach production.
         </p>
-        <div className="flex items-center gap-3 pt-1">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pt-1">
           <DemoButton />
           <span className="text-[12px] text-muted">
             triggers a sample run, watch it appear below
@@ -141,7 +141,9 @@ export default async function Home({
                 className="flex items-center justify-between gap-3 border-b border-border-soft px-4 py-3 text-[13px] transition last:border-0 hover:bg-surface-2"
               >
                 <span className="flex min-w-0 items-center gap-2">
-                  <span className="truncate font-mono text-text">{r.label}</span>
+                  <span className="truncate font-mono text-text">
+                    {r.label}
+                  </span>
                   <span className="hidden truncate text-muted sm:inline">
                     {suiteName.get(r.suite_id) ?? ""}
                   </span>
@@ -150,9 +152,7 @@ export default async function Home({
                   {r.regressed > 0 && <Pill tone="bad">{r.regressed} reg</Pill>}
                   {r.flagged > 0 && <Pill tone="warn">{r.flagged} flag</Pill>}
                   <span
-                    className={
-                      r.passed === r.total ? "text-good" : "text-warn"
-                    }
+                    className={r.passed === r.total ? "text-good" : "text-warn"}
                   >
                     {r.passed}/{r.total}
                   </span>
@@ -160,16 +160,20 @@ export default async function Home({
               </Link>
             ))}
           </div>
-          {totalPages > 1 && (
-            <Pagination page={page} totalPages={totalPages} />
-          )}
+          {totalPages > 1 && <Pagination page={page} totalPages={totalPages} />}
         </section>
       )}
     </div>
   );
 }
 
-function Pagination({ page, totalPages }: { page: number; totalPages: number }) {
+function Pagination({
+  page,
+  totalPages,
+}: {
+  page: number;
+  totalPages: number;
+}) {
   const linkCls =
     "rounded-lg border border-border bg-surface px-3 py-1.5 text-[13px] transition hover:border-accent/50 hover:text-text";
   const disabled = "pointer-events-none opacity-40";
@@ -223,7 +227,11 @@ function PassRateChart({ runs }: { runs: Run[] }) {
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: 150 }}>
         <defs>
           <linearGradient id="tcfill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="rgb(var(--accent))" stopOpacity="0.28" />
+            <stop
+              offset="0"
+              stopColor="rgb(var(--accent))"
+              stopOpacity="0.28"
+            />
             <stop offset="1" stopColor="rgb(var(--accent))" stopOpacity="0" />
           </linearGradient>
         </defs>
@@ -304,9 +312,9 @@ function Metric({
 }
 
 function Gauge({ rate }: { rate: number }) {
-  const tone = rate === 100 ? "text-good" : rate >= 75 ? "text-warn" : "text-bad";
-  const ring =
-    rate === 100 ? "#3fb950" : rate >= 75 ? "#e3a008" : "#f85149";
+  const tone =
+    rate === 100 ? "text-good" : rate >= 75 ? "text-warn" : "text-bad";
+  const ring = rate === 100 ? "#3fb950" : rate >= 75 ? "#e3a008" : "#f85149";
   return (
     <div className="relative grid h-14 w-14 shrink-0 place-items-center">
       <div

@@ -48,6 +48,10 @@ body {
 body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Guard against any stray wide element pushing the page sideways on mobile.
+     clip (not hidden) avoids turning body into a scroll container, so sticky
+     headers keep working. */
+  overflow-x: clip;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
@@ -87,19 +91,22 @@ body {
     linear-gradient(rgb(var(--text) / 0.025) 1px, transparent 1px),
     linear-gradient(90deg, rgb(var(--text) / 0.025) 1px, transparent 1px);
   background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black, transparent 75%);
+  mask-image: radial-gradient(
+    ellipse 70% 60% at 50% 0%,
+    black,
+    transparent 75%
+  );
   z-index: 0;
 }
 
 @layer components {
   /* Modern glass card. */
   .glass {
-    background:
-      linear-gradient(
-        180deg,
-        rgb(var(--surface) / 0.9),
-        rgb(var(--surface) / 0.55)
-      );
+    background: linear-gradient(
+      180deg,
+      rgb(var(--surface) / 0.9),
+      rgb(var(--surface) / 0.55)
+    );
     backdrop-filter: blur(12px);
     border: 1px solid rgb(var(--text) / 0.08);
     box-shadow:
@@ -118,11 +125,7 @@ body {
     box-shadow: 0 18px 50px -20px rgb(0 0 0 / 0.7);
   }
   .gradient-text {
-    background: linear-gradient(
-      120deg,
-      rgb(var(--text)),
-      rgb(var(--accent))
-    );
+    background: linear-gradient(120deg, rgb(var(--text)), rgb(var(--accent)));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
