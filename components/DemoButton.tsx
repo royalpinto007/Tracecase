@@ -10,10 +10,17 @@ export function DemoButton() {
   async function run() {
     setState("running");
     try {
-      await fetch("/api/demo", { method: "POST" });
+      const res = await fetch("/api/demo", { method: "POST" });
+      const data = (await res.json()) as { runId?: string };
       setState("done");
-      router.refresh();
-      setTimeout(() => setState("idle"), 2500);
+      // Take the visitor straight to the run they just produced, with a banner
+      // explaining what it is, so the action has a clear, understandable result.
+      if (data.runId) {
+        router.push(`/runs/${data.runId}?demo=1`);
+      } else {
+        router.refresh();
+        setState("idle");
+      }
     } catch {
       setState("idle");
     }
