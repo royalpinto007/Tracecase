@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Sidebar, MobileBar } from "@/components/Sidebar";
 import { themeInitScript } from "@/components/ThemeToggle";
+import { ChatWidget } from "@/components/ChatWidget";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -50,6 +51,10 @@ export default function RootLayout({
             </footer>
           </div>
         </div>
+        <ChatWidget
+          name="Tracecase"
+          greeting="Hi! Ask me about Tracecase, agent evals, or how a run gets scored."
+        />
       </body>
     </html>
   );
