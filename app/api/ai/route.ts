@@ -21,9 +21,10 @@ export async function OPTIONS() {
 }
 
 export async function POST(req: NextRequest) {
-  const { prompt, history } = (await req.json().catch(() => ({}))) as {
+  const { prompt, history, max } = (await req.json().catch(() => ({}))) as {
     prompt?: string;
     history?: { role: string; content: string }[];
+    max?: number;
   };
   if (!prompt) {
     return NextResponse.json(
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
     const r = await fetch(GATEWAY, {
       method: "POST",
       headers: { "content-type": "application/json", "x-ai-secret": secret },
-      body: JSON.stringify({ system: SYSTEM, prompt: full, max: 240 }),
+      body: JSON.stringify({ system: SYSTEM, prompt: full, max: typeof max === "number" ? max : undefined }),
     });
     const d = (await r.json()) as { reply?: string; error?: string };
     return NextResponse.json(

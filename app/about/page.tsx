@@ -1,64 +1,98 @@
+import Link from "next/link";
+
 export const metadata = { title: "About: Tracecase" };
+
+const features = [
+  {
+    icon: "◉",
+    title: "Records every run",
+    body: "Inputs, outputs, tool calls, latency and pass/fail for each case in a suite.",
+  },
+  {
+    icon: "⇄",
+    title: "Diffs vs the last run",
+    body: "Every run is compared to the previous one to find exactly what changed.",
+  },
+  {
+    icon: "⚑",
+    title: "Flags regressions",
+    body: "Cases that newly fail, hallucinate, or make an unsafe tool call are surfaced.",
+  },
+  {
+    icon: "⛔",
+    title: "Gates the merge",
+    body: "Returns shouldFail so your CI blocks a bad prompt or model change.",
+  },
+];
 
 export default function About() {
   return (
-    <article className="prose-invert mx-auto max-w-2xl space-y-6 animate-fade-up">
-      <header className="space-y-2">
-        <span className="inline-block rounded-full border border-border bg-surface px-3 py-1 text-[11px] uppercase tracking-widest text-muted">
+    <div className="mx-auto max-w-3xl space-y-10 animate-fade-up">
+      <section>
+        <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-[11px] uppercase tracking-widest text-muted">
           about
         </span>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Why Tracecase exists
+        <h1 className="gradient-text mt-4 text-balance text-4xl font-semibold tracking-tight">
+          Catch agent regressions before your users do.
         </h1>
-      </header>
+        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted">
+          Teams ship AI agents with no way to know that a prompt tweak or model
+          bump quietly broke behavior. The agent still answers, it just answers
+          worse, or calls a tool it should not, and they find out in production.
+          Tracecase is the test layer that catches it first.
+        </p>
+      </section>
 
-      <p className="text-[15px] leading-relaxed text-muted">
-        Teams ship AI agents and have no way to know that a prompt tweak or a
-        model bump did not quietly break behavior. The agent still answers, it
-        just answers worse, or calls a tool it should not. Most teams find out
-        in production. Tracecase is the test layer that catches it first.
-      </p>
+      <section className="grid gap-3 sm:grid-cols-2">
+        {features.map((f) => (
+          <div key={f.title} className="glass hover-lift rounded-2xl p-5">
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-accent to-accent-2 text-[15px] text-bg">
+              {f.icon}
+            </div>
+            <h2 className="mt-3 text-[15px] font-semibold">{f.title}</h2>
+            <p className="mt-1 text-[13px] leading-relaxed text-muted">
+              {f.body}
+            </p>
+          </div>
+        ))}
+      </section>
 
-      <Section title="What it does">
-        <ul className="space-y-2 text-[14px] text-muted">
-          <li>Records every agent run: inputs, outputs, tool calls, latency.</li>
-          <li>Replays a suite against a new prompt or model and diffs the result.</li>
-          <li>Flags regressions (passed before, fails now) and unsafe tool calls.</li>
-          <li>Returns a shouldFail signal so CI can block the merge.</li>
-        </ul>
-      </Section>
-
-      <Section title="How it is built">
-        <p className="text-[14px] leading-relaxed text-muted">
+      <section className="glass rounded-2xl p-6">
+        <h2 className="text-sm font-medium text-muted">How it is built</h2>
+        <p className="mt-2 text-[14px] leading-relaxed text-muted">
           Next.js on Cloudflare Workers, a Supabase Postgres backend, and a
-          token-protected ingest API. It is exercised continuously by an n8n
-          workflow that posts fresh runs every 30 minutes, so the dashboard is
-          always live.
+          token-protected ingest API. An n8n workflow posts a fresh run every
+          hour so the dashboard is always live, and a built-in AI assistant
+          explains any run in plain English.
         </p>
-      </Section>
+        <div className="mt-4 flex flex-wrap gap-2 text-[12px]">
+          {["Next.js", "Cloudflare Workers", "Supabase", "n8n", "Ollama"].map(
+            (t) => (
+              <span
+                key={t}
+                className="rounded-md border border-border bg-bg px-2.5 py-1 text-muted"
+              >
+                {t}
+              </span>
+            ),
+          )}
+        </div>
+      </section>
 
-      <Section title="Who it is for">
-        <p className="text-[14px] leading-relaxed text-muted">
-          Anyone shipping LLM agents in production: support bots, coding agents,
-          research agents. If a prompt change can break something, Tracecase
-          tells you before your users do.
-        </p>
-      </Section>
-    </article>
-  );
-}
-
-function Section({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="rounded-2xl border border-border bg-surface p-5 shadow-card">
-      <h2 className="mb-3 text-sm font-medium">{title}</h2>
-      {children}
-    </section>
+      <div className="flex gap-3">
+        <Link
+          href="/"
+          className="rounded-lg bg-gradient-to-br from-accent to-accent-2 px-4 py-2 text-[13px] font-semibold text-bg"
+        >
+          Open the dashboard
+        </Link>
+        <Link
+          href="/help"
+          className="rounded-lg border border-border bg-surface px-4 py-2 text-[13px] transition hover:border-accent/50"
+        >
+          Read the docs
+        </Link>
+      </div>
+    </div>
   );
 }

@@ -126,6 +126,8 @@ body {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    padding-bottom: 0.12em;
+    line-height: 1.18;
   }
 }
 
