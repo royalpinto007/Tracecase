@@ -83,7 +83,6 @@ export function ChatWidget({
               AI
             </span>
             <span className="text-[13px] font-semibold">{name} assistant</span>
-            <span className="ml-auto text-[10px] text-muted">llama3.2 · Ollama</span>
           </div>
 
           <div className="flex-1 space-y-3 overflow-y-auto px-4 py-3">

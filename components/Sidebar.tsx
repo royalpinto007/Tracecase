@@ -31,7 +31,7 @@ export function Sidebar() {
       <Link href="/" className="flex items-center gap-2.5 px-2">
         <Mark />
         <span className="font-mono text-[15px] font-semibold tracking-tight">
-          tracecase
+          Tracecase
         </span>
       </Link>
 
@@ -67,7 +67,7 @@ export function MobileBar() {
     <header className="sticky top-0 z-20 flex items-center justify-between border-b border-border-soft bg-bg/80 px-4 py-3 backdrop-blur-md md:hidden">
       <Link href="/" className="flex items-center gap-2">
         <Mark />
-        <span className="font-mono text-[14px] font-semibold">tracecase</span>
+        <span className="font-mono text-[14px] font-semibold">Tracecase</span>
       </Link>
       <div className="flex items-center gap-3 font-mono text-[12px] text-muted">
         <Link href="/about" className="hover:text-text">

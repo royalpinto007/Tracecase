@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/supabase";
 import type { Result, Run } from "@/lib/types";
+import { ExplainRun } from "@/components/ExplainRun";
 
 export const dynamic = "force-dynamic";
 
@@ -55,6 +56,15 @@ export default async function RunPage({
   const rows = (results ?? []) as Result[];
   const rate = r.total ? Math.round((r.passed / r.total) * 100) : 0;
   const isDemo = searchParams.demo === "1";
+
+  const failing = rows
+    .filter((x) => !x.passed)
+    .map((x) => `${x.case_name}${x.flags.length ? ` [${x.flags.join(", ")}]` : ""}`)
+    .join("; ");
+  const aiSummary =
+    `Run "${r.label}" on ${r.model ?? "n/a"} (prompt ${r.prompt_version ?? "n/a"}): ` +
+    `${r.passed}/${r.total} passed, ${r.regressed} regressed, ${r.flagged} flagged. ` +
+    `Failing cases: ${failing || "none"}.`;
 
   return (
     <div className="space-y-6 animate-fade-up">
@@ -117,6 +127,8 @@ export default async function RunPage({
           </span>
         </div>
       </div>
+
+      <ExplainRun summary={aiSummary} />
 
       {/* Cases */}
       <div className="space-y-3">
