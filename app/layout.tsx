@@ -43,10 +43,10 @@ export default function RootLayout({
           <div className="flex min-h-screen min-w-0 flex-1 flex-col">
             <MobileBar />
             <main className="flex-1 px-5 py-8 md:px-10 lg:px-14">
-              <div className="mx-auto w-full max-w-6xl">{children}</div>
+              <div className="mx-auto w-full max-w-[88rem]">{children}</div>
             </main>
             <footer className="border-t border-border-soft px-5 py-5 md:px-10 lg:px-14">
-              <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 font-mono text-[11px] text-muted">
+              <div className="mx-auto flex w-full max-w-[88rem] flex-col gap-3 font-mono text-[11px] text-muted">
                 <span>tracecase · record runs · replay changes · catch regressions</span>
                 <SuiteLinks />
               </div>
