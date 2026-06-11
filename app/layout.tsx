@@ -4,6 +4,7 @@ import "./globals.css";
 import { Sidebar, MobileBar } from "@/components/Sidebar";
 import { themeInitScript } from "@/components/ThemeToggle";
 import { ChatWidget } from "@/components/ChatWidget";
+import { SuiteLinks } from "@/components/SuiteLinks";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -45,8 +46,9 @@ export default function RootLayout({
               <div className="mx-auto w-full max-w-6xl">{children}</div>
             </main>
             <footer className="border-t border-border-soft px-5 py-5 md:px-10 lg:px-14">
-              <div className="mx-auto w-full max-w-6xl font-mono text-[11px] text-muted">
-                tracecase · record runs · replay changes · catch regressions
+              <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 font-mono text-[11px] text-muted">
+                <span>tracecase · record runs · replay changes · catch regressions</span>
+                <SuiteLinks />
               </div>
             </footer>
           </div>
