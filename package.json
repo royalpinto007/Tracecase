@@ -8,9 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cf:build": "opennextjs-cloudflare build",
-    "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
+    "cf:build": "NODE_OPTIONS=--no-deprecation opennextjs-cloudflare build",
+    "cf:preview": "NODE_OPTIONS=--no-deprecation opennextjs-cloudflare build && NODE_OPTIONS=--no-deprecation opennextjs-cloudflare preview",
+    "deploy": "NODE_OPTIONS=--no-deprecation opennextjs-cloudflare build && NODE_OPTIONS=--no-deprecation opennextjs-cloudflare deploy"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
