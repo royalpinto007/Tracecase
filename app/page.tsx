@@ -53,7 +53,7 @@ export default async function Home({
     <div className="space-y-10">
       <section className="grid items-stretch gap-5 animate-fade-up lg:grid-cols-[1.25fr_0.85fr]">
         <div className="glass relative overflow-hidden rounded-2xl p-6 sm:p-7">
-          <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
+          <div className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full bg-accent/20 blur-3xl sm:-right-24 sm:-top-24 sm:h-64 sm:w-64" />
           <div className="relative">
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-[11px] uppercase tracking-widest text-muted">
               agent reliability
@@ -138,9 +138,9 @@ export default async function Home({
                 <Link
                   key={s.id}
                   href={run ? `/runs/${run.id}` : "#"}
-                  className="group glass hover-lift rounded-2xl p-5"
+                  className="group glass hover-lift min-w-0 rounded-2xl p-4 sm:p-5"
                 >
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="flex min-w-0 items-start justify-between gap-3 sm:gap-4">
                     <div className="min-w-0">
                       <div className="font-medium">{s.name}</div>
                       {s.description && (
