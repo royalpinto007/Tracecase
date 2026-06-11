@@ -1,26 +1,26 @@
 const suite = [
   {
     name: "Greenlite",
-    href: "https://greenlite.aashinyraa.workers.dev",
-    icon: "https://greenlite.aashinyraa.workers.dev/favicon.svg",
+    href: "https://greenlite.agentpostmortem.com",
+    icon: "https://greenlite.agentpostmortem.com/favicon.svg",
     role: "Human approval cockpit",
   },
   {
     name: "Resolvd",
-    href: "https://resolvd.aashinyraa.workers.dev",
-    icon: "https://resolvd.aashinyraa.workers.dev/icon.svg",
+    href: "https://resolvd.agentpostmortem.com",
+    icon: "https://resolvd.agentpostmortem.com/icon.svg",
     role: "Support inbox operator",
   },
   {
     name: "Bridgekit",
-    href: "https://bridgekit.aashinyraa.workers.dev",
-    icon: "https://bridgekit.aashinyraa.workers.dev/icon.svg",
+    href: "https://bridgekit.agentpostmortem.com",
+    icon: "https://bridgekit.agentpostmortem.com/icon.svg",
     role: "Scoped MCP tools",
   },
   {
     name: "Webhands",
-    href: "https://webhands.aashinyraa.workers.dev",
-    icon: "https://webhands.aashinyraa.workers.dev/icon.svg",
+    href: "https://webhands.agentpostmortem.com",
+    icon: "https://webhands.agentpostmortem.com/icon.svg",
     role: "Browser-use agents",
   },
   {
