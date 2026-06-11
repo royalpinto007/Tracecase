@@ -46,25 +46,70 @@ export default async function Home({
   const totalPages = Math.max(1, Math.ceil(totalRuns / PER_PAGE));
   const pageRuns = allRuns.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
+  const latestRun = allRuns[0];
+  const latestRate = latestRun ? pct(latestRun.passed, latestRun.total) : 0;
+
   return (
     <div className="space-y-10">
-      <section className="space-y-3 animate-fade-up">
-        <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-[11px] uppercase tracking-widest text-muted">
-          agent reliability
-        </span>
-        <h1 className="gradient-text text-balance text-4xl font-semibold tracking-tight sm:text-[2.9rem]">
-          CI for your AI agents.
-        </h1>
-        <p className="max-w-xl text-[15px] leading-relaxed text-muted">
-          Every prompt or model change is replayed against your test suites.
-          Tracecase diffs the results, then flags regressions and unsafe tool
-          calls before they reach production.
-        </p>
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pt-1">
-          <DemoButton />
-          <span className="text-[12px] text-muted">
-            triggers a sample run, watch it appear below
-          </span>
+      <section className="grid items-stretch gap-5 animate-fade-up lg:grid-cols-[1.25fr_0.85fr]">
+        <div className="glass relative overflow-hidden rounded-2xl p-6 sm:p-7">
+          <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
+          <div className="relative">
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-[11px] uppercase tracking-widest text-muted">
+              agent reliability
+            </span>
+            <h1 className="gradient-text mt-4 text-balance text-4xl font-semibold tracking-tight sm:text-[3rem]">
+              CI for your AI agents.
+            </h1>
+            <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted">
+              Every prompt or model change is replayed against your test suites.
+              Tracecase diffs the results, then flags regressions and unsafe tool
+              calls before they reach production.
+            </p>
+            <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2">
+              <DemoButton />
+              <span className="text-[12px] text-muted">
+                triggers a sample run, watch it appear below
+              </span>
+            </div>
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              <HeroSignal label="Replay runs" value={totalRuns} />
+              <HeroSignal label="Suites watched" value={list.length} />
+              <HeroSignal label="Latest pass" value={`${latestRate}%`} />
+            </div>
+          </div>
+        </div>
+
+        <div className="glass flex flex-col rounded-2xl p-5">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-sm font-medium text-muted">Latest run</h2>
+              <p className="mt-1 font-mono text-[13px] text-text">
+                {latestRun?.label ?? "waiting for CI"}
+              </p>
+            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-2.5 py-1 text-[10px] text-accent">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
+              live
+            </span>
+          </div>
+          <div className="mt-6 grid flex-1 place-items-center">
+            <Gauge rate={latestRate} size="lg" />
+          </div>
+          <div className="mt-5 grid grid-cols-2 gap-3 text-[12px]">
+            <div className="rounded-xl border border-border-soft bg-bg/50 p-3">
+              <div className="text-muted">Regressions</div>
+              <div className="mt-1 text-xl font-semibold tabular-nums text-bad">
+                {latestRun?.regressed ?? 0}
+              </div>
+            </div>
+            <div className="rounded-xl border border-border-soft bg-bg/50 p-3">
+              <div className="text-muted">Unsafe calls</div>
+              <div className="mt-1 text-xl font-semibold tabular-nums text-warn">
+                {latestRun?.flagged ?? 0}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -311,20 +356,38 @@ function Metric({
   );
 }
 
-function Gauge({ rate }: { rate: number }) {
+function HeroSignal({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number;
+}) {
+  return (
+    <div className="rounded-xl border border-border-soft bg-bg/40 p-3">
+      <div className="text-xl font-semibold tabular-nums">{value}</div>
+      <div className="mt-1 text-[11px] text-muted">{label}</div>
+    </div>
+  );
+}
+
+function Gauge({ rate, size = "sm" }: { rate: number; size?: "sm" | "lg" }) {
   const tone =
     rate === 100 ? "text-good" : rate >= 75 ? "text-warn" : "text-bad";
   const ring = rate === 100 ? "#3fb950" : rate >= 75 ? "#e3a008" : "#f85149";
+  const frame = size === "lg" ? "h-32 w-32" : "h-14 w-14";
+  const inner = size === "lg" ? "h-24 w-24" : "h-11 w-11";
+  const text = size === "lg" ? "text-2xl" : "text-[13px]";
   return (
-    <div className="relative grid h-14 w-14 shrink-0 place-items-center">
+    <div className={`relative grid shrink-0 place-items-center ${frame}`}>
       <div
-        className="h-14 w-14 rounded-full"
+        className={`rounded-full ${frame}`}
         style={{
           background: `conic-gradient(${ring} ${rate * 3.6}deg, #26262e 0deg)`,
         }}
       />
-      <div className="absolute grid h-11 w-11 place-items-center rounded-full bg-surface">
-        <span className={`text-[13px] font-semibold tabular-nums ${tone}`}>
+      <div className={`absolute grid place-items-center rounded-full bg-surface ${inner}`}>
+        <span className={`font-semibold tabular-nums ${tone} ${text}`}>
           {rate}%
         </span>
       </div>
